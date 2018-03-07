@@ -1,4 +1,4 @@
-package com.example.codexsstorm.logisticsapp;
+package com.example.codexsstorm.logisticsapp.Activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,9 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
+
+import com.example.codexsstorm.logisticsapp.R;
 
 public class Login extends AppCompatActivity {
 
@@ -43,6 +42,10 @@ public class Login extends AppCompatActivity {
                 else{
                     Name = etName.getText().toString();
                     Password = etPassword.getText().toString();
+                    if(Name.equals("Max") && Password.equals("12345")){
+                        Intent i = new Intent(getApplicationContext(),LogisticsList.class);
+                        startActivity(i);
+                    }
                 }
             }
         });
