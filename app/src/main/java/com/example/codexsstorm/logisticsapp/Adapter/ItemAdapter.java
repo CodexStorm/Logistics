@@ -1,6 +1,7 @@
 package com.example.codexsstorm.logisticsapp.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,32 +9,26 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.codexsstorm.logisticsapp.Entity.CategoryEntity;
 import com.example.codexsstorm.logisticsapp.R;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
- * Created by codexsstorm on 6/3/18.
+ * Created by codexsstorm on 7/3/18.
  */
 
-public class CategoryAdapter extends BaseAdapter {
-
+public class ItemAdapter extends BaseAdapter {
     private Context mContext;
-    private String[] category;
-    private int[] id;
+    private final List Item;
 
-    public CategoryAdapter(Context mContext, String[] category, int[] id) {
+    public ItemAdapter(Context mContext, List<String> item) {
         this.mContext = mContext;
-        this.category = category;
-        this.id = id;
+        Item = item;
     }
 
     @Override
     public int getCount() {
-        int length = category.length;
+        int length = Item.size();
         return length;
     }
 
@@ -54,11 +49,11 @@ public class CategoryAdapter extends BaseAdapter {
 
         if (view == null){
             grid = new View(mContext);
-            grid = inflater.inflate(R.layout.grid_layout,null);
+            Log.d("qwerIndex",i+"");
+            Log.d("qwerName",Item.get(i).toString()+"");
+            grid = inflater.inflate(R.layout.item_layout,null);
             TextView textView = (TextView) grid.findViewById(R.id.grid_text);
-            ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
-            textView.setText(category[i]);
-            imageView.setImageResource(id[i]);
+            textView.setText(Item.get(i).toString());
         }else {
             grid = (View)view;
         }

@@ -2,12 +2,17 @@ package com.example.codexsstorm.logisticsapp.Other;
 
 import com.example.codexsstorm.logisticsapp.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by codexsstorm on 7/3/18.
  */
 
 public class Data {
-    public String[] category = {
+
+    public static String[] Category = {
             "Tools",
             "Electronics",
             "Stationary",
@@ -16,23 +21,9 @@ public class Data {
             "Cutlery",
             "Travel",
             "Books"
-
-    } ;
-
-    public String[] tools = {
-            "Claw Harmer",
-            "Flathead Screwdriver",
-            "Tape Measure",
-            "Crescent Wrench",
-            "Pliers",
-            "Driller",
-            "Saw",
-            "Blade"
     };
 
-
-
-    public int[] imageId = {
+    public static int[] ImageId = {
             R.drawable.tools,
             R.drawable.cpu,
             R.drawable.archives,
@@ -40,18 +31,30 @@ public class Data {
             R.drawable.toys,
             R.drawable.food,
             R.drawable.luggage,
-            R.drawable.books,
+            R.drawable.books
     };
 
+    public static List tools = Arrays.asList("Claw Harmer",
+            "Flathead Screwdriver",
+            "Tape Measure",
+            "Crescent Wrench",
+            "Pliers",
+            "Driller",
+            "Saw",
+            "Blade");
 
+
+
+    public List getTools() {
+        return tools;
+    }
 
     public String[] getCategory() {
-        return category;
+        return Category;
     }
+
 
     public int[] getImageId() {
-        return imageId;
+        return ImageId;
     }
-
-
 }
