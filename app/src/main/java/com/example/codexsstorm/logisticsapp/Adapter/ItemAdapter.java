@@ -1,6 +1,7 @@
 package com.example.codexsstorm.logisticsapp.Adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,52 +12,50 @@ import android.widget.TextView;
 
 import com.example.codexsstorm.logisticsapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by codexsstorm on 7/3/18.
  */
 
-public class ItemAdapter extends BaseAdapter {
-    private Context mContext;
-    private final List Item;
+public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
-    public ItemAdapter(Context mContext, List<String> item) {
-        this.mContext = mContext;
-        Item = item;
+    List<String> itemList=new ArrayList<>();
+    Context context;
+
+    public ItemAdapter(List<String> itemList, Context context) {
+        this.itemList = itemList;
+        this.context = context;
     }
 
     @Override
-    public int getCount() {
-        int length = Item.size();
-        return length;
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout,parent,false);
+        ViewHolder holder = new ViewHolder(v);
+        return holder;
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final String name = itemList.get(position);
+        holder.Item.setText(name);
     }
 
     @Override
-    public long getItemId(int i) {
-        return 0;
+    public int getItemCount() {
+        return itemList.size();
     }
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View grid;
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        if (view == null){
-            grid = new View(mContext);
-            Log.d("qwerIndex",i+"");
-            Log.d("qwerName",Item.get(i).toString()+"");
-            grid = inflater.inflate(R.layout.item_layout,null);
-            TextView textView = (TextView) grid.findViewById(R.id.grid_text);
-            textView.setText(Item.get(i).toString());
-        }else {
-            grid = (View)view;
+    public class ViewHolder extends RecyclerView.ViewHolder
+    {
+        TextView Item;
+        View cardView;
+        public ViewHolder(View itemView) {
+            super(itemView);
+            cardView=itemView;
+            Item = (TextView)itemView.findViewById(R.id.grid_text) ;
         }
-        return grid;
+
     }
 }

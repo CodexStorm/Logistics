@@ -22,20 +22,13 @@
             android:textAlignment="center"/>
     </android.support.v7.widget.Toolbar>
 
-    <GridView
-        android:id="@+id/gridview"
-        android:layout_marginTop="70dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="2"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:stretchMode="columnWidth"
-        android:layout_marginLeft="20dp"
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="60dp"
+        android:id="@+id/rvItems"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:elevation="5dp"
-        />
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
 
 </android.support.constraint.ConstraintLayout>

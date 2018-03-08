@@ -1,6 +1,7 @@
 package com.example.codexsstorm.logisticsapp.Adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import java.util.Set;
  * Created by codexsstorm on 6/3/18.
  */
 
-public class CategoryAdapter extends BaseAdapter {
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
     private Context mContext;
     private String[] category;
@@ -32,36 +33,36 @@ public class CategoryAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        int length = category.length;
-        return length;
+    public CategoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_layout,parent,false);
+        ViewHolder holder=new ViewHolder(v);
+        return holder;
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public void onBindViewHolder(CategoryAdapter.ViewHolder holder, int position) {
+        final String name = category[position];
+        final int image = id[position];
+        holder.Image.setImageResource(image);
+        holder.Category.setText(name);
     }
 
     @Override
-    public long getItemId(int i) {
-        return 0;
+    public int getItemCount() {
+        return category.length;
     }
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View grid;
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        if (view == null){
-            grid = new View(mContext);
-            grid = inflater.inflate(R.layout.grid_layout,null);
-            TextView textView = (TextView) grid.findViewById(R.id.grid_text);
-            ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
-            textView.setText(category[i]);
-            imageView.setImageResource(id[i]);
-        }else {
-            grid = (View)view;
+    public class ViewHolder extends RecyclerView.ViewHolder
+    {
+        TextView Category;
+        ImageView Image;
+        View cardView;
+        public ViewHolder(View itemView) {
+            super(itemView);
+            cardView=itemView;
+            Category = (TextView)itemView.findViewById(R.id.grid_text) ;
+            Image = (ImageView)itemView.findViewById(R.id.grid_image);
         }
-        return grid;
+
     }
 }

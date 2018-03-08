@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -27,6 +29,8 @@ public class ItemList extends AppCompatActivity {
 
     GridView grid;
     AlertDialog alertDialog = null;
+    RecyclerView recyclerView;
+    ItemAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +40,16 @@ public class ItemList extends AppCompatActivity {
         Set<String> oldSet = sharedPrefs.getStringSet("Tools", new HashSet<String>());
         List<String> Items = new ArrayList<>();
         Items.addAll(oldSet);
-        final ItemAdapter adapter = new ItemAdapter(getApplicationContext(),Items);
+
+        recyclerView=(RecyclerView)findViewById(R.id.rvItems);
+        LinearLayoutManager manager=new LinearLayoutManager(ItemList.this);
+        recyclerView.setLayoutManager(manager);
+        adapter = new ItemAdapter(Items,ItemList.this);
+        recyclerView.hasFixedSize();
+        adapter.notifyDataSetChanged();
+        recyclerView.setAdapter(adapter);
+
+        /*final ItemAdapter adapter = new ItemAdapter(getApplicationContext(),Items);
         grid = (GridView)findViewById(R.id.gridview);
         grid.setAdapter(adapter);
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -64,6 +77,6 @@ public class ItemList extends AppCompatActivity {
                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
                 alertDialog.show();
             }
-        });
+        });*/
     }
 }
