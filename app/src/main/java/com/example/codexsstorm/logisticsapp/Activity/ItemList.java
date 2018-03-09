@@ -1,73 +1,87 @@
 package com.example.codexsstorm.logisticsapp.Activity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.codexsstorm.logisticsapp.Adapter.CategoryAdapter;
 import com.example.codexsstorm.logisticsapp.Adapter.ItemAdapter;
-import com.example.codexsstorm.logisticsapp.Other.Data;
+import com.example.codexsstorm.logisticsapp.Other.CommonFunction;
+import com.example.codexsstorm.logisticsapp.Other.SharedPreference;
 import com.example.codexsstorm.logisticsapp.R;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ItemList extends AppCompatActivity {
 
-    GridView grid;
     AlertDialog alertDialog = null;
     RecyclerView recyclerView;
     ItemAdapter adapter;
+    RelativeLayout addItem;
+    SharedPreference sharedPreferences;
+    CommonFunction commonFunction;
+    List<String> Items;
+    List<Integer> ItemsQuantity;
+    String cat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
-        SharedPreferences sharedPrefs = ItemList.this.getSharedPreferences("YourActivityPreferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        Set<String> oldSet = sharedPrefs.getStringSet("Tools", new HashSet<String>());
-        List<String> Items = new ArrayList<>();
-        Items.addAll(oldSet);
-
+        Bundle b = getIntent().getExtras();
+        commonFunction = new CommonFunction();
+        sharedPreferences = new SharedPreference();
+        cat = b.getString("Category");
+        addItem = (RelativeLayout)findViewById(R.id.rladd);
+        /*Items = new ArrayList<String>();
+        Items = commonFunction.getItemList(ItemList.this,cat);
+        ItemsQuantity = new ArrayList<Integer>();
+        ItemsQuantity = commonFunction.getItemQuantity(ItemList.this,cat+"Q");*/
         recyclerView=(RecyclerView)findViewById(R.id.rvItems);
         LinearLayoutManager manager=new LinearLayoutManager(ItemList.this);
         recyclerView.setLayoutManager(manager);
-        adapter = new ItemAdapter(Items,ItemList.this);
+        adapter = new ItemAdapter(commonFunction.getItemList(ItemList.this,cat),commonFunction.getItemQuantity(ItemList.this,cat+"Q"), ItemList.this);
         recyclerView.hasFixedSize();
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
-        /*final ItemAdapter adapter = new ItemAdapter(getApplicationContext(),Items);
-        grid = (GridView)findViewById(R.id.gridview);
-        grid.setAdapter(adapter);
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        addItem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+            public void onClick(View view) {
+                LayoutInflater inflater = getLayoutInflater();
+                final View alertLayout = inflater.inflate(R.layout.alert_dialogue_add, null);
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ItemList.this, R.style.AlertDialogBackground);
                 alertDialogBuilder
-                        .setMessage("Do you want to delete this ? ")
+                        .setView(alertLayout)
+                        .setTitle("Add Item")
                         .setCancelable(true)
-                        .setPositiveButton("Yes",
+                        .setPositiveButton("Add",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
+                                        EditText ItemName = (EditText)alertLayout.findViewById(R.id.itemName);
+                                        String iName = ItemName.getText().toString();
+                                        EditText ItemQuantity = (EditText)alertLayout.findViewById(R.id.itemQuantity);
+                                        String iQuantity = ItemQuantity.getText().toString();
+                                        sharedPreferences.add(ItemList.this,cat,iName,iQuantity);
+                                        adapter = new ItemAdapter(commonFunction.getItemList(ItemList.this,cat),commonFunction.getItemQuantity(ItemList.this,cat+"Q"), ItemList.this);
+                                        recyclerView.hasFixedSize();
                                         adapter.notifyDataSetChanged();
-                                        grid.setAdapter(adapter);
+                                        recyclerView.setAdapter(adapter);
                                         alertDialog.dismiss();
                                     }
                                 })
-                        .setNegativeButton("No",
+                        .setNegativeButton("Back",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         alertDialog.dismiss();
@@ -77,6 +91,91 @@ public class ItemList extends AppCompatActivity {
                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
                 alertDialog.show();
             }
-        });*/
+        });
+
     }
+
+    public void deleteItem(final int position){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ItemList.this, R.style.AlertDialogBackground);
+        alertDialogBuilder
+                .setTitle("Delete Item")
+                .setMessage("Are you sure you want to delete this item ? ")
+                .setCancelable(true)
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                sharedPreferences.delete(ItemList.this,cat,position);
+                                adapter = new ItemAdapter(commonFunction.getItemList(ItemList.this,cat),commonFunction.getItemQuantity(ItemList.this,cat+"Q"), ItemList.this);
+                                recyclerView.hasFixedSize();
+                                adapter.notifyDataSetChanged();
+                                recyclerView.setAdapter(adapter);
+                                alertDialog.dismiss();
+                            }
+                        })
+                .setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                alertDialog.dismiss();
+                            }
+                        });
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
+        alertDialog.show();
+    }
+
+    public void editItem(final String name, final int quantity, final int position){
+        LayoutInflater inflater = getLayoutInflater();
+        final View alertLayout = inflater.inflate(R.layout.alert_dialogue_edit, null);
+        TextView tvQuantity = (TextView)alertLayout.findViewById(R.id.tvQuantity);
+        tvQuantity.setText("Available Quanitity : "+quantity+"");
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ItemList.this, R.style.AlertDialogBackground);
+        alertDialogBuilder
+                .setView(alertLayout)
+                .setTitle("Edit Quantity")
+                .setCancelable(true)
+                .setPositiveButton("Add",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                EditText ItemQuantity = (EditText) alertLayout.findViewById(R.id.itemQuantity);
+                                String EditQuantity = ItemQuantity.getText().toString();
+                                if (EditQuantity.isEmpty()) {
+                                    Toast.makeText(ItemList.this, "Invalid", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    int quant = quantity + Integer.parseInt(EditQuantity);
+                                    sharedPreferences.edit(ItemList.this, cat, name, quant, position);
+                                    adapter = new ItemAdapter(commonFunction.getItemList(ItemList.this, cat), commonFunction.getItemQuantity(ItemList.this, cat + "Q"), ItemList.this);
+                                    recyclerView.hasFixedSize();
+                                    adapter.notifyDataSetChanged();
+                                    recyclerView.setAdapter(adapter);
+                                    alertDialog.dismiss();
+                                }
+                            }
+                        })
+                .setNegativeButton("Remove",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                EditText ItemQuantity = (EditText) alertLayout.findViewById(R.id.itemQuantity);
+                                String EditQuantity = ItemQuantity.getText().toString();
+                                if (EditQuantity.isEmpty()) {
+                                    Toast.makeText(ItemList.this, "Invalid", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    if (quantity > Integer.parseInt(EditQuantity)) {
+                                        int quant = quantity - Integer.parseInt(EditQuantity);
+                                        sharedPreferences.edit(ItemList.this, cat, name, quant, position);
+                                        adapter = new ItemAdapter(commonFunction.getItemList(ItemList.this, cat), commonFunction.getItemQuantity(ItemList.this, cat + "Q"), ItemList.this);
+                                        recyclerView.hasFixedSize();
+                                        adapter.notifyDataSetChanged();
+                                        recyclerView.setAdapter(adapter);
+                                        alertDialog.dismiss();
+                                    } else
+                                        Toast.makeText(ItemList.this, "Unavailable", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
+        alertDialog.show();
+    }
+
 }

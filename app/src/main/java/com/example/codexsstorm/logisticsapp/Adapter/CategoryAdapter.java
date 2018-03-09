@@ -1,6 +1,7 @@
 package com.example.codexsstorm.logisticsapp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.codexsstorm.logisticsapp.Activity.ItemList;
+import com.example.codexsstorm.logisticsapp.Activity.LogisticsList;
 import com.example.codexsstorm.logisticsapp.Entity.CategoryEntity;
 import com.example.codexsstorm.logisticsapp.R;
 
@@ -25,11 +28,18 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     private Context mContext;
     private String[] category;
     private int[] id;
+    private CallBack mCallBack;
 
-    public CategoryAdapter(Context mContext, String[] category, int[] id) {
+    public interface CallBack{
+        void CallItemList(int id,String name);
+
+    }
+
+    public CategoryAdapter(Context mContext, String[] category, int[] id, CallBack callback) {
         this.mContext = mContext;
         this.category = category;
         this.id = id;
+        this.mCallBack = callback;
     }
 
     @Override
@@ -40,11 +50,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(CategoryAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(CategoryAdapter.ViewHolder holder, final int position) {
         final String name = category[position];
         final int image = id[position];
         holder.Image.setImageResource(image);
         holder.Category.setText(name);
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCallBack.CallItemList(position,category[position]);
+            }
+        });
     }
 
     @Override

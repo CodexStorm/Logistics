@@ -37,7 +37,15 @@ public class LogisticsList extends AppCompatActivity {
         recyclerView=(RecyclerView)findViewById(R.id.rvCategory);
         LinearLayoutManager manager=new LinearLayoutManager(LogisticsList.this);
         recyclerView.setLayoutManager(manager);
-        CategoryAdapter adapter = new CategoryAdapter(getApplicationContext(),data.getCategory(),data.getImageId());
+        CategoryAdapter adapter = new CategoryAdapter(getApplicationContext(), data.getCategory(), data.getImageId(), new CategoryAdapter.CallBack() {
+            @Override
+            public void CallItemList(int id, String name) {
+                Intent intent=new Intent(LogisticsList.this, ItemList.class);
+                intent.putExtra("ID",id);
+                intent.putExtra("Category",name);
+                startActivity(intent);
+            }
+        });
         recyclerView.hasFixedSize();
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);

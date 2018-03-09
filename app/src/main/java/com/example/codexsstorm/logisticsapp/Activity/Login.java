@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.codexsstorm.logisticsapp.Other.Data;
 import com.example.codexsstorm.logisticsapp.Other.SharedPreference;
@@ -30,45 +31,30 @@ public class Login extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Button click;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        etName = (EditText)findViewById(R.id.etFullName);
-        etPassword = (EditText)findViewById(R.id.etPassword);
-        bProceed = (Button)findViewById(R.id.bProceed);
-        bProceed.setOnClickListener(new View.OnClickListener() {
+        click = (Button)findViewById(R.id.user_profile_photo);
+        click.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if(etName.getText().toString().trim().length()==0){
-                    etName.setError("Username is not entered");
-                    etName.requestFocus();
-                }
-                else if(etPassword.getText().toString().trim().length()==0){
-                    etPassword.setError("Password is not entered");
-                    etPassword.requestFocus();
+            public void onClick(View view) {
+                SharedPreferences settings = Login.this.getSharedPreferences("YourActivityPreferences", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = settings.edit();
+
+                int flag = settings.getInt("Stored", 0);
+                if(flag == 0){
+                    SharedPreference s = new SharedPreference();
+                    s.store(Login.this);
+                    editor.putInt("Stored",1);
+                    Intent i = new Intent(getApplicationContext(),LogisticsList.class);
+                    startActivity(i);
                 }
                 else{
-                    Name = etName.getText().toString();
-                    Password = etPassword.getText().toString();
-                    if(Name.equals("Max") && Password.equals("12345")){
-                        SharedPreferences settings = Login.this.getSharedPreferences("YourActivityPreferences", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-
-                        int flag = settings.getInt("Stored", 0);
-                        if(flag == 0){
-                            SharedPreference s = new SharedPreference();
-                            s.store(Login.this);
-                            editor.putInt("Stored",1);
-                            Intent i = new Intent(getApplicationContext(),LogisticsList.class);
-                            startActivity(i);
-                        }
-                        else{
-                            Intent i = new Intent(getApplicationContext(),LogisticsList.class);
-                            startActivity(i);
-                        }
-                    }
+                    Intent i = new Intent(getApplicationContext(),LogisticsList.class);
+                    startActivity(i);
                 }
             }
         });
+
     }
 }
