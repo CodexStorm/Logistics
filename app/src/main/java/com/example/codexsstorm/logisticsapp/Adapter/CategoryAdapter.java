@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.example.codexsstorm.logisticsapp.Activity.ItemList;
 import com.example.codexsstorm.logisticsapp.Activity.LogisticsList;
-import com.example.codexsstorm.logisticsapp.Entity.CategoryEntity;
 import com.example.codexsstorm.logisticsapp.R;
 
 import java.util.ArrayList;

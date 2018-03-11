@@ -34,15 +34,15 @@ public class Data {
             R.drawable.books
     };
 
-    public static String tools ="Claw Harmer,Flathead Screwdriver,Tape Measure,Crescent Wrench,Pliers,Driller,Saw,Blade";
+    public static String tools ="Claw harmer,Flathead Screwdriver,Tape measure,Crescent wrench,Pliers,Driller,Saw,Blade";
     public static String toolsq = "4,6,2,5,1,7,8,9";
     public static String electronics = "Laptop,Mobile,TV,Music Player,Watch,Speaker,Bluetooth";
     public static String elctronicsq = "1,5,2,4,6,8,9";
     public static String stationary = "Pen,Pencil,Rubber,Sharpener,Ink,Scale,Stensils,Paper";
     public static String stationaryq = "4,6,2,5,1,7,8,9";
-    public static String furniture = "Sofa,Bed,Cupboard,Chair,Table,Curtains,Side Table,Lamp Stand";
+    public static String furniture = "Sofa,Bed,Cupboard,Chair,Table,Curtains,Side table,Lamp stand";
     public static String furnitureq = "4,6,2,5,1,7,8,9";
-    public static String toys = "Baby Toys,Cars,Puzzles,Board,Marker,Pictionary,Monopoly";
+    public static String toys = "Baby toys,Cars,Puzzles,Board,Marker,Pictionary,Monopoly";
     public static String toysq = "4,6,2,5,1,7,8,9";
     public static String cutlery = "Plane,Spoon,Fork,Tea Cup,Saucer,Plates,Cups,Box";
     public static String cutleryq = "4,6,2,5,1,7,8,9";

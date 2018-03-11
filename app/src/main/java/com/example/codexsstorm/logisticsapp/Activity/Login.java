@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.example.codexsstorm.logisticsapp.Other.Data;
 import com.example.codexsstorm.logisticsapp.Other.SharedPreference;
@@ -26,8 +27,8 @@ public class Login extends AppCompatActivity {
     private EditText etName;
     private EditText etPassword;
     private Button bProceed;
-
-
+    private RelativeLayout rlLogin;
+    private Button bInventory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,29 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         click = (Button)findViewById(R.id.user_profile_photo);
-        click.setOnClickListener(new View.OnClickListener() {
+        bInventory = (Button)findViewById(R.id.bInventory);
+        bInventory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences settings = Login.this.getSharedPreferences("YourActivityPreferences", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = settings.edit();
+
+                int flag = settings.getInt("Stored", 0);
+                if(flag == 0){
+                    SharedPreference s = new SharedPreference();
+                    s.store(Login.this);
+                    editor.putInt("Stored",1);
+                    Intent i = new Intent(getApplicationContext(),LogisticsList.class);
+                    startActivity(i);
+                }
+                else{
+                    Intent i = new Intent(getApplicationContext(),LogisticsList.class);
+                    startActivity(i);
+                }
+            }
+        });
+        rlLogin = (RelativeLayout)findViewById(R.id.rlLogin);
+        rlLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences settings = Login.this.getSharedPreferences("YourActivityPreferences", Context.MODE_PRIVATE);

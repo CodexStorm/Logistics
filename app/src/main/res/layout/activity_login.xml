@@ -7,9 +7,21 @@
     android:orientation="vertical"
     android:scrollbarAlwaysDrawVerticalTrack="true">
     <RelativeLayout
+        android:id="@+id/rlLogin"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Button
+            android:id="@+id/bInventory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="400dp"
+            android:elevation="4dp"
+            android:text="Inventory"
+            android:textColor="#fff"
+            android:background="#05B8cc"
+        />
         <Button
             android:id="@+id/user_profile_photo"
             android:layout_width="100dp"

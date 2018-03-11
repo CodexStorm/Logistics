@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,13 +34,13 @@ public class ItemList extends AppCompatActivity {
     RelativeLayout addItem;
     SharedPreference sharedPreferences;
     CommonFunction commonFunction;
-    List<String> Items;
-    List<Integer> ItemsQuantity;
     String cat;
+    ImageView ivBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
+        ivBack = (ImageView)findViewById(R.id.ivBack);
         Bundle b = getIntent().getExtras();
         commonFunction = new CommonFunction();
         sharedPreferences = new SharedPreference();
@@ -48,13 +50,20 @@ public class ItemList extends AppCompatActivity {
         Items = commonFunction.getItemList(ItemList.this,cat);
         ItemsQuantity = new ArrayList<Integer>();
         ItemsQuantity = commonFunction.getItemQuantity(ItemList.this,cat+"Q");*/
-        recyclerView=(RecyclerView)findViewById(R.id.rvItems);
         LinearLayoutManager manager=new LinearLayoutManager(ItemList.this);
+        recyclerView = (RecyclerView)findViewById(R.id.rvItems);
         recyclerView.setLayoutManager(manager);
         adapter = new ItemAdapter(commonFunction.getItemList(ItemList.this,cat),commonFunction.getItemQuantity(ItemList.this,cat+"Q"), ItemList.this);
         recyclerView.hasFixedSize();
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ItemList.super.onBackPressed();
+            }
+        });
 
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,12 +82,17 @@ public class ItemList extends AppCompatActivity {
                                         String iName = ItemName.getText().toString();
                                         EditText ItemQuantity = (EditText)alertLayout.findViewById(R.id.itemQuantity);
                                         String iQuantity = ItemQuantity.getText().toString();
-                                        sharedPreferences.add(ItemList.this,cat,iName,iQuantity);
-                                        adapter = new ItemAdapter(commonFunction.getItemList(ItemList.this,cat),commonFunction.getItemQuantity(ItemList.this,cat+"Q"), ItemList.this);
-                                        recyclerView.hasFixedSize();
-                                        adapter.notifyDataSetChanged();
-                                        recyclerView.setAdapter(adapter);
-                                        alertDialog.dismiss();
+                                        if(Integer.parseInt(iQuantity)<10000 && iName.length()<30) {
+                                            sharedPreferences.add(ItemList.this, cat, iName, iQuantity);
+                                            adapter = new ItemAdapter(commonFunction.getItemList(ItemList.this, cat), commonFunction.getItemQuantity(ItemList.this, cat + "Q"), ItemList.this);
+                                            recyclerView.hasFixedSize();
+                                            adapter.notifyDataSetChanged();
+                                            recyclerView.setAdapter(adapter);
+                                            alertDialog.dismiss();
+                                        }
+                                        else{
+                                            Toast.makeText(ItemList.this,"Not enough Storage",Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 })
                         .setNegativeButton("Back",
@@ -141,7 +155,7 @@ public class ItemList extends AppCompatActivity {
                                 String EditQuantity = ItemQuantity.getText().toString();
                                 if (EditQuantity.isEmpty()) {
                                     Toast.makeText(ItemList.this, "Invalid", Toast.LENGTH_SHORT).show();
-                                } else {
+                                } else if (Integer.parseInt(EditQuantity)+quantity<10000){
                                     int quant = quantity + Integer.parseInt(EditQuantity);
                                     sharedPreferences.edit(ItemList.this, cat, name, quant, position);
                                     adapter = new ItemAdapter(commonFunction.getItemList(ItemList.this, cat), commonFunction.getItemQuantity(ItemList.this, cat + "Q"), ItemList.this);
@@ -149,6 +163,9 @@ public class ItemList extends AppCompatActivity {
                                     adapter.notifyDataSetChanged();
                                     recyclerView.setAdapter(adapter);
                                     alertDialog.dismiss();
+                                }
+                                else{
+                                    Toast.makeText(ItemList.this,"Not enough Storage",Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })
