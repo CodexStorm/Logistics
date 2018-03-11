@@ -82,16 +82,21 @@ public class ItemList extends AppCompatActivity {
                                         String iName = ItemName.getText().toString();
                                         EditText ItemQuantity = (EditText)alertLayout.findViewById(R.id.itemQuantity);
                                         String iQuantity = ItemQuantity.getText().toString();
-                                        if(Integer.parseInt(iQuantity)<10000 && iName.length()<30) {
-                                            sharedPreferences.add(ItemList.this, cat, iName, iQuantity);
-                                            adapter = new ItemAdapter(commonFunction.getItemList(ItemList.this, cat), commonFunction.getItemQuantity(ItemList.this, cat + "Q"), ItemList.this);
-                                            recyclerView.hasFixedSize();
-                                            adapter.notifyDataSetChanged();
-                                            recyclerView.setAdapter(adapter);
-                                            alertDialog.dismiss();
+                                        if(iQuantity.isEmpty()||iName.isEmpty()) {
+                                            Toast.makeText(ItemList.this, "Invalid", Toast.LENGTH_SHORT).show();
+
                                         }
                                         else{
-                                            Toast.makeText(ItemList.this,"Not enough Storage",Toast.LENGTH_SHORT).show();
+                                            if (Integer.parseInt(iQuantity) < 10000 && iName.length() < 30) {
+                                                sharedPreferences.add(ItemList.this, cat, iName, iQuantity);
+                                                adapter = new ItemAdapter(commonFunction.getItemList(ItemList.this, cat), commonFunction.getItemQuantity(ItemList.this, cat + "Q"), ItemList.this);
+                                                recyclerView.hasFixedSize();
+                                                adapter.notifyDataSetChanged();
+                                                recyclerView.setAdapter(adapter);
+                                                alertDialog.dismiss();
+                                            } else {
+                                                Toast.makeText(ItemList.this, "Not enough Storage", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     }
                                 })
